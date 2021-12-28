@@ -10,7 +10,7 @@
   });
 
   // mapbox API access token 
-  var accessToken = 'pk.eyJ1IjoiZGVhdG5uciIsImEiOiJja29vZzNxdXkwOWNwMm9yeDc1eDIyaWZlIn0.GYqw7WL4cQHfboID4_ADgg';
+  var accessToken = 'pk.eyJ1IjoiZGVhdG5uciIsImEiOiJja3Z2MnQ5YWUwbTI5Mm5vNmwwajM0N2prIn0.fnQmRz1QKtEr17wabjsPOA';
 
   // request a mapbox raster tile layer and add to map
   L.tileLayer(`https://api.mapbox.com/styles/v1/mapbox/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}`, {
