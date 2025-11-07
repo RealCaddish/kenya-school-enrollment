@@ -13,12 +13,31 @@
   var accessToken = 'pk.eyJ1IjoiZGVhdG5uciIsImEiOiJja3Z2MnQ5YWUwbTI5Mm5vNmwwajM0N2prIn0.fnQmRz1QKtEr17wabjsPOA';
 
   // request a mapbox raster tile layer and add to map
-  L.tileLayer(`https://api.mapbox.com/styles/v1/mapbox/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}`, {
+  var mapboxLayer = L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
     attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
     maxZoom: 18,
-    id: 'light-v10',
+    id: 'mapbox/light-v10',
+    tileSize: 512,
+    zoomOffset: -1,
     accessToken: accessToken
-  }).addTo(map);
+  });
+
+  var osmLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+  });
+
+  if (accessToken && accessToken.startsWith('pk.')) {
+    mapboxLayer.on('tileerror', function () {
+      map.removeLayer(mapboxLayer);
+      osmLayer.addTo(map);
+      console.warn('Falling back to OpenStreetMap tiles after Mapbox error.');
+    });
+
+    mapboxLayer.addTo(map);
+  } else {
+    osmLayer.addTo(map);
+    console.warn('Mapbox access token missing or invalid. Using OpenStreetMap tiles.');
+  }
 
   omnivore.csv('data/kenya_education_2014.csv')
     .on('ready', function (e) {
